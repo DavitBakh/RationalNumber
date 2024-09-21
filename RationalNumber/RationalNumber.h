@@ -39,8 +39,14 @@ namespace yourname
 		RationalNumber& operator-=(const RationalNumber& other);
 		RationalNumber& operator*=(const RationalNumber& other);
 		RationalNumber& operator/=(const RationalNumber& other);
+
 		RationalNumber& operator++();
 		RationalNumber operator++(int);
+		RationalNumber& operator--();
+		RationalNumber operator--(int);
+
+		RationalNumber operator+();
+		RationalNumber operator-();
 
 
 		template <typename U>
@@ -51,6 +57,9 @@ namespace yourname
 
 	template <typename T>
 	RationalNumber<T>::RationalNumber(T num, T denom) : _num(num), _denom(denom) {}
+
+
+#pragma region += -= *= /=
 
 	template <typename T>
 	RationalNumber<T>& RationalNumber<T>::operator+=(const RationalNumber& other)
@@ -96,6 +105,10 @@ namespace yourname
 		return *this;
 	}
 
+#pragma endregion
+
+#pragma region Increment Decrement
+
 	template <typename T>
 	RationalNumber<T>& RationalNumber<T>::operator++()
 	{
@@ -111,9 +124,35 @@ namespace yourname
 		return result;
 	}
 
+	template <typename T>
+	RationalNumber<T>& RationalNumber<T>::operator--()
+	{
+		_num -= _denom;
+		return *this;
+	}
+
+	template <typename T>
+	RationalNumber<T> RationalNumber<T>::operator--(int)
+	{
+		RationalNumber result{ *this };
+		--(*this);
+		return result;
+	}
+
+#pragma endregion
+
+#pragma region + - * /
 
 	template <typename T>
 	RationalNumber<T> operator+(const RationalNumber<T>& lhs, const RationalNumber<T>& rhs)
+	{
+		RationalNumber res(lhs);
+		res += rhs;
+		return res;
+	}
+
+	template <typename T>
+	RationalNumber<T> operator+(const T& lhs, const RationalNumber<T>& rhs)
 	{
 		RationalNumber res(lhs);
 		res += rhs;
@@ -129,7 +168,23 @@ namespace yourname
 	}
 
 	template <typename T>
+	RationalNumber<T> operator-(const T& lhs, const RationalNumber<T>& rhs)
+	{
+		RationalNumber res(lhs);
+		res -= rhs;
+		return res;
+	}
+
+	template <typename T>
 	RationalNumber<T> operator*(const RationalNumber<T>& lhs, const RationalNumber<T>& rhs)
+	{
+		RationalNumber res(lhs);
+		res *= rhs;
+		return res;
+	}
+
+	template <typename T>
+	RationalNumber<T> operator*(const T& lhs, const RationalNumber<T>& rhs)
 	{
 		RationalNumber res(lhs);
 		res *= rhs;
@@ -143,6 +198,33 @@ namespace yourname
 		res /= rhs;
 		return res;
 	}
+
+	template <typename T>
+	RationalNumber<T> operator/(const T& lhs, const RationalNumber<T>& rhs)
+	{
+		RationalNumber res(lhs);
+		res /= rhs;
+		return res;
+	}
+
+
+	template<typename T>
+	inline RationalNumber<T> RationalNumber<T>::operator+()
+	{
+		return (*this);
+	}
+
+	template<typename T>
+	inline RationalNumber<T> RationalNumber<T>::operator-()
+	{
+		RationalNumber res(*this);
+		res._num *= -1;
+		return res;
+	}
+
+
+#pragma endregion
+
 
 	template<typename T>
 	std::ostream& operator<<(std::ostream& os, const RationalNumber<T>& source)
