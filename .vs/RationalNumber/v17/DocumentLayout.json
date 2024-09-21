@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|solutionrelative:RationalNumber\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\RationalNumber.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|solutionrelative:RationalNumber\\RationalNumber.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\Tests\\Test4.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|solutionrelative:RationalNumber\\Tests\\Test4.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|solutionrelative:RationalNumber\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -26,28 +30,63 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "main.cpp",
               "DocumentMoniker": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\main.cpp",
               "RelativeDocumentMoniker": "RationalNumber\\main.cpp",
               "ToolTip": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\main.cpp",
               "RelativeToolTip": "RationalNumber\\main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAATAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-09-21T09:29:47.061Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "RationalNumber.h",
               "DocumentMoniker": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\RationalNumber.h",
               "RelativeDocumentMoniker": "RationalNumber\\RationalNumber.h",
               "ToolTip": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\RationalNumber.h",
               "RelativeToolTip": "RationalNumber\\RationalNumber.h",
-              "ViewState": "AgIAADQAAAAAAAAAAAAAAHgAAAACAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAmwDoAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-09-20T16:34:36.761Z"
+              "WhenOpened": "2024-09-20T16:34:36.761Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "4d76ffc9-2c26-4414-8296-e9261b1b369d",
+        "Display": 1,
+        "X": 333,
+        "Y": 0,
+        "Width": 1578,
+        "Height": 780,
+        "WindowState": 2
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Test4.h",
+              "DocumentMoniker": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\Tests\\Test4.h",
+              "RelativeDocumentMoniker": "RationalNumber\\Tests\\Test4.h",
+              "ToolTip": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\Tests\\Test4.h",
+              "RelativeToolTip": "RationalNumber\\Tests\\Test4.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-09-21T19:23:56.987Z",
+              "EditorCaption": ""
             }
           ]
         }

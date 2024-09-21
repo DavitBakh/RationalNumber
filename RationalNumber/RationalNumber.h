@@ -45,8 +45,12 @@ namespace yourname
 		RationalNumber& operator--();
 		RationalNumber operator--(int);
 
-		RationalNumber operator+();
-		RationalNumber operator-();
+		RationalNumber operator+() const;
+		RationalNumber operator-() const;
+
+		operator int() const;
+		operator float() const;
+		operator double() const;
 
 
 		template <typename U>
@@ -209,13 +213,13 @@ namespace yourname
 
 
 	template<typename T>
-	inline RationalNumber<T> RationalNumber<T>::operator+()
+	inline RationalNumber<T> RationalNumber<T>::operator+() const
 	{
 		return (*this);
 	}
 
 	template<typename T>
-	inline RationalNumber<T> RationalNumber<T>::operator-()
+	inline RationalNumber<T> RationalNumber<T>::operator-() const
 	{
 		RationalNumber res(*this);
 		res._num *= -1;
@@ -225,6 +229,27 @@ namespace yourname
 
 #pragma endregion
 
+#pragma region Cast Operators
+
+	template<typename T>
+	RationalNumber<T>::operator int() const
+	{
+		return _num / _denom;
+	}
+
+	template<typename T>
+	RationalNumber<T>::operator float() const
+	{
+		return float(_num) / _denom;
+	}
+
+	template<typename T>
+	RationalNumber<T>::operator double() const
+	{
+		return double(_num) / _denom;
+	}
+
+#pragma endregion
 
 	template<typename T>
 	std::ostream& operator<<(std::ostream& os, const RationalNumber<T>& source)
