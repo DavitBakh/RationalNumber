@@ -20,17 +20,19 @@
 
 #include <iostream>
 #include <numeric>
+#include <stdexcept>
 
 namespace yourname
 {
+	template<typename T>
+	void reduce(T& a, T& b);
+
 	template <typename T>
 	class RationalNumber
 	{
 	private:
 		T _num;
 		T _denom;
-
-		void reduce();
 
 	public:
 		RationalNumber(T num = 0, T denom = 1);
@@ -69,13 +71,16 @@ namespace yourname
 	template <typename T>
 	RationalNumber<T>::RationalNumber(T num, T denom) : _num(num), _denom(denom)
 	{
+		if (_denom == 0)
+			throw std::invalid_argument("denom can't be 0");
+
 		if (_denom < 0)
 		{
 			_num *= -1;
 			_denom *= -1;
 		}
 
-		reduce();
+		reduce(_num, _denom);
 	}
 
 
@@ -84,10 +89,10 @@ namespace yourname
 	template <typename T>
 	RationalNumber<T>& RationalNumber<T>::operator+=(const RationalNumber& other)
 	{
-		this->_num = this->_num * other._denom + other._num * this->_denom;
-		this->_denom *= other._denom;
+		T temp = std::lcm(this->_denom, other._denom);
 
-		reduce();
+		this->_num = this->_num * (temp / this->_denom) + other._num * (temp / other._denom);
+		this->_denom = temp;
 
 		return *this;
 	}
@@ -95,10 +100,10 @@ namespace yourname
 	template <typename T>
 	RationalNumber<T>& RationalNumber<T>::operator-=(const RationalNumber& other)
 	{
-		this->_num = this->_num * other._denom - other._num * this->_denom;
-		this->_denom *= other._denom;
+		T temp = std::lcm(this->_denom, other._denom);
 
-		reduce();
+		this->_num = this->_num * (temp / this->_denom) - other._num * (temp / other._denom);
+		this->_denom = temp;
 
 		return *this;
 	}
@@ -106,10 +111,14 @@ namespace yourname
 	template <typename T>
 	RationalNumber<T>& RationalNumber<T>::operator*=(const RationalNumber& other)
 	{
-		this->_num *= other._num;
-		this->_denom *= other._denom;
+		T tempNum = other._num;
+		T tempDenom = other._denom;
 
-		reduce();
+		reduce(this->_num, tempDenom);
+		reduce(this->_denom, tempNum);
+
+		this->_num *= tempNum;
+		this->_denom *= tempDenom;
 
 		return *this;
 	}
@@ -117,10 +126,14 @@ namespace yourname
 	template <typename T>
 	RationalNumber<T>& RationalNumber<T>::operator/=(const RationalNumber& other)
 	{
-		this->_num *= other._denom;
-		this->_denom *= other._num;
+		T tempNum = other._num;
+		T tempDenom = other._denom;
 
-		reduce();
+		reduce(this->_num, tempNum);
+		reduce(this->_denom, tempDenom);
+
+		this->_num *= tempDenom;
+		this->_denom *= tempNum;
 
 		return *this;
 	}
@@ -314,7 +327,6 @@ namespace yourname
 #pragma endregion
 
 
-
 	template<typename T>
 	std::ostream& operator<<(std::ostream& os, const RationalNumber<T>& source)
 	{
@@ -324,12 +336,19 @@ namespace yourname
 	}
 
 	template<typename T>
-	void RationalNumber<T>::reduce()
+	void reduce(T& a, T& b)
 	{
-		T temp = std::gcd(_num, _denom);
-		_num /= temp;
-		_denom /= temp;
+		T temp = std::gcd(a, b);
+		a /= temp;
+		b /= temp;
 	}
 
+	namespace literals
+	{
+		RationalNumber<unsigned long long> operator""_r(unsigned long long value)
+		{
+			return RationalNumber<unsigned long long>(value);
+		}
+	}
 
 } // namespace yourname
