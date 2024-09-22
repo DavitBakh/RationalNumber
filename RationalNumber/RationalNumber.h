@@ -126,8 +126,17 @@ namespace yourname
 	template <typename T>
 	RationalNumber<T>& RationalNumber<T>::operator/=(const RationalNumber& other)
 	{
+		if (other._num == 0)
+			throw std::logic_error("Zero division error");
+
 		T tempNum = other._num;
 		T tempDenom = other._denom;
+
+		if (tempNum < 0)
+		{
+			tempNum *= -1;
+			tempDenom *= -1;
+		}
 
 		reduce(this->_num, tempNum);
 		reduce(this->_denom, tempDenom);
@@ -179,6 +188,7 @@ namespace yourname
 	template <typename T>
 	RationalNumber<T> operator+(const RationalNumber<T>& lhs, const RationalNumber<T>& rhs)
 	{
+		//in this way will work return value optimization and constructor will calls one time
 		RationalNumber res(lhs);
 		res += rhs;
 		return res;
