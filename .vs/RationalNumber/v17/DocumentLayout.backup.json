@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|solutionrelative:RationalNumber\\RationalNumber.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\Tests\\Test4.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|solutionrelative:RationalNumber\\Tests\\Test4.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|solutionrelative:RationalNumber\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\Tests\\Test5.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{AB314EDE-D689-486C-80FC-98BB29A7A8AB}|RationalNumber\\RationalNumber.vcxproj|solutionrelative:RationalNumber\\Tests\\Test5.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,13 +30,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "main.cpp",
               "DocumentMoniker": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\main.cpp",
               "RelativeDocumentMoniker": "RationalNumber\\main.cpp",
               "ToolTip": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\main.cpp",
               "RelativeToolTip": "RationalNumber\\main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-09-21T09:29:47.061Z"
             },
@@ -46,9 +46,9 @@
               "Title": "RationalNumber.h",
               "DocumentMoniker": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\RationalNumber.h",
               "RelativeDocumentMoniker": "RationalNumber\\RationalNumber.h",
-              "ToolTip": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\RationalNumber.h",
-              "RelativeToolTip": "RationalNumber\\RationalNumber.h",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAwCAAAAAQAAAAAAAAAA==",
+              "ToolTip": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\RationalNumber.h*",
+              "RelativeToolTip": "RationalNumber\\RationalNumber.h*",
+              "ViewState": "AgIAADEAAAAAAAAAAAAEwEMAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-09-20T16:34:36.761Z",
               "EditorCaption": ""
@@ -61,9 +61,9 @@
       "Orientation": 0,
       "VerticalTabListWidth": 256,
       "FloatingWindowState": {
-        "Id": "4d76ffc9-2c26-4414-8296-e9261b1b369d",
+        "Id": "d08dd78d-4651-4474-a129-1ca0699780ee",
         "Display": 1,
-        "X": 333,
+        "X": 362,
         "Y": 0,
         "Width": 1578,
         "Height": 780,
@@ -76,15 +76,15 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Test4.h",
-              "DocumentMoniker": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\Tests\\Test4.h",
-              "RelativeDocumentMoniker": "RationalNumber\\Tests\\Test4.h",
-              "ToolTip": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\Tests\\Test4.h",
-              "RelativeToolTip": "RationalNumber\\Tests\\Test4.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAABGAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "Test5.h",
+              "DocumentMoniker": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\Tests\\Test5.h",
+              "RelativeDocumentMoniker": "RationalNumber\\Tests\\Test5.h",
+              "ToolTip": "E:\\Daser\\C\u002B\u002B\\Projects\\RationalNumber\\RationalNumber\\Tests\\Test5.h",
+              "RelativeToolTip": "RationalNumber\\Tests\\Test5.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-09-21T19:23:56.987Z",
+              "WhenOpened": "2024-09-21T19:57:12.076Z",
               "EditorCaption": ""
             }
           ]

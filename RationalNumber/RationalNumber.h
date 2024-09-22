@@ -60,7 +60,16 @@ namespace yourname
 
 
 	template <typename T>
-	RationalNumber<T>::RationalNumber(T num, T denom) : _num(num), _denom(denom) {}
+	RationalNumber<T>::RationalNumber(T num, T denom) : _num(num), _denom(denom) 
+	{
+		if (_denom < 0)
+		{
+			_num *= -1;
+			_denom *= -1;
+		}
+
+		reduce();
+	}
 
 
 #pragma region += -= *= /=
@@ -250,6 +259,7 @@ namespace yourname
 	}
 
 #pragma endregion
+
 
 	template<typename T>
 	std::ostream& operator<<(std::ostream& os, const RationalNumber<T>& source)
