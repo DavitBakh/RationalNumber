@@ -51,16 +51,23 @@ namespace yourname
 		operator int() const;
 		operator float() const;
 		operator double() const;
+		operator bool() const;
 
 
 		template <typename U>
 		friend std::ostream& operator<<(std::ostream& os, const RationalNumber<U>& source);
 
+		template <typename U>
+		friend bool operator<(const RationalNumber<U>& lhs, const RationalNumber<U>& rhs);
+
+		template <typename U>
+		friend bool operator==(const RationalNumber<U>& lhs, const RationalNumber<U>& rhs);
+
 	};
 
 
 	template <typename T>
-	RationalNumber<T>::RationalNumber(T num, T denom) : _num(num), _denom(denom) 
+	RationalNumber<T>::RationalNumber(T num, T denom) : _num(num), _denom(denom)
 	{
 		if (_denom < 0)
 		{
@@ -258,7 +265,54 @@ namespace yourname
 		return double(_num) / _denom;
 	}
 
+	template<typename T>
+	RationalNumber<T>::operator bool() const
+	{
+		return _num != 0;
+	}
+
 #pragma endregion
+
+#pragma region Bool Operators
+
+	template<typename U>
+	bool operator==(const RationalNumber<U>& lhs, const RationalNumber<U>& rhs)
+	{
+		return lhs._num == rhs._num && lhs._denom == rhs._denom;
+	}
+
+	template<typename U>
+	bool operator!=(const RationalNumber<U>& lhs, const RationalNumber<U>& rhs)
+	{
+		return !(lhs == rhs);
+	}
+
+	template<typename U>
+	bool operator<(const RationalNumber<U>& lhs, const RationalNumber<U>& rhs)
+	{
+		return (lhs._num * rhs._denom) < (rhs._num * lhs._denom);
+	}
+
+	template<typename U>
+	bool operator<=(const RationalNumber<U>& lhs, const RationalNumber<U>& rhs)
+	{
+		return !(rhs < lhs);
+	}
+
+	template<typename U>
+	bool operator>(const RationalNumber<U>& lhs, const RationalNumber<U>& rhs)
+	{
+		return rhs < lhs;
+	}
+
+	template<typename U>
+	bool operator>=(const RationalNumber<U>& lhs, const RationalNumber<U>& rhs)
+	{
+		return !(lhs < rhs);
+	}
+
+#pragma endregion
+
 
 
 	template<typename T>
