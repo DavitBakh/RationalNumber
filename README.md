@@ -1,152 +1,230 @@
-# ➗ RationalNumber — C++ Templated Rational Arithmetic Class
+# RationalNumber — Generic Exact Fraction Arithmetic in C++
 
-![C++20](https://img.shields.io/badge/Language-C%2B%2B20-blue.svg)
-![IDE](https://img.shields.io/badge/IDE-Visual%20Studio%202022-purple.svg)
-![Type](https://img.shields.io/badge/Type-Value%20Type%20%7C%20Template-green.svg)
-![Coursework](https://img.shields.io/badge/University-Data%20Structures%20Course-orange.svg)
-![Tests](https://img.shields.io/badge/Tests-TDD%20(9%20Suites)-brightgreen.svg)
+![Language](https://img.shields.io/badge/Language-C%2B%2B17%20%2F%20C%2B%2B20-00599C?logo=c%2B%2B&logoColor=white)
+![IDE](https://img.shields.io/badge/IDE-Visual%20Studio%202022-5C2D91?logo=visualstudio&logoColor=white)
+![Toolset](https://img.shields.io/badge/Toolset-MSVC%20v143-blue)
+![Tests](https://img.shields.io/badge/Tests-9%20TDD%20Suites%20Passing-brightgreen)
+![Coursework](https://img.shields.io/badge/Course-Data%20Structures-orange)
 
-Университетский курсовой проект по дисциплине **«Структуры данных и алгоритмы»**. Проект представляет собой шаблонный класс рационального числа (`RationalNumber<T>`), обеспечивающий точные вычисления с обыкновенными дробями без потери точности, свойственной числам с плавающей точкой (`float` / `double`).
-
-Класс спроектирован в строгом соответствии с идиомами современного C++ (C++20), принципами ООП и перегрузки операторов стандартной библиотеки C++.
+A header-only generic C++ class template (`RationalNumber<T>`) for exact rational (fraction) arithmetic, developed as part of a university **Data Structures** course. Parameterized over any underlying integer type `T` (such as `int`, `long long`, or `unsigned long long`), `RationalNumber<T>` eliminates IEEE-754 floating-point representation error by maintaining fractions in canonical reduced form $\frac{p}{q}$ with $q > 0$ and $\gcd(|p|, q) = 1$.
 
 ---
 
-## 📌 Основные возможности
+## Table of Contents
 
-- 📐 **Шаблонизация по типу данных**: `template <typename T> class RationalNumber` поддерживает любые целочисленные типы (`int`, `long long`, `short`, `int64_t` и др.).
-- 🔄 **Автоматическая канонизация и сокращение**:
-  - Сокращение дроби на наибольший общий делитель через `std::gcd`.
-  - Приведение к общему знаменателю при сложении и вычитании через наименьшее общее кратное `std::lcm`.
-  - Нормализация знака: знаменатель всегда строго положителен (`_denom > 0`), знак дроби переносится в числитель.
-- 🛡️ **Контроль корректности и исключения**:
-  - При попытке создания дроби с нулевым знаменателем (`denom == 0`) выбрасывается `std::invalid_argument`.
-- ➕ **Полный спектр арифметических операций**:
-  - Бинарные операторы: `+`, `-`, `*`, `/`.
-  - Составное присваивание: `+=`, `-=`, `*=`, `/=`.
-  - Унарные операторы: `+`, `-`.
-  - Инкремент и декремент (префиксные и постфиксные): `++`, `--`.
-- ⚖️ **Операторы сравнения**:
-  - `==`, `!=`, `<`, `<=`, `>`, `>=`.
-  - Сравнение выполняется через перекрёстное умножение `(a * d < c * b)` без потери точности и без деления с остатком.
-- 🔁 **Операторы приведения типов**:
-  - `operator int()` — усечение до целого.
-  - `operator float()` и `operator double()` — вычисление точного вещественного значения.
-  - `operator bool()` — проверка на неравенство нулю (`num != 0`).
-- ✍️ **Пользовательские литералы (User-Defined Literals)**:
-  - Пространство имён `yourname::literals` предоставляет литерал `_r`, позволяющий создавать рациональные числа вида `42_r` или `0_r`.
-- 🖨️ **Потоковый вывод**:
-  - Перегрузка `operator<<` для `std::ostream` в формате `числитель/знаменатель` (например, `3/4` или `-1/2`).
+- [Overview](#overview)
+- [Key Technical Features](#key-technical-features)
+- [Mathematical Invariants & Overflow Mitigation](#mathematical-invariants--overflow-mitigation)
+- [Project Structure](#project-structure)
+- [API Reference & Complexity](#api-reference--complexity)
+- [Code Examples](#code-examples)
+- [Test Suite (TDD)](#test-suite-tdd)
+- [Building & Running](#building--running)
+- [Design Trade-Offs: Rational vs. Floating-Point](#design-trade-offs-rational-vs-floating-point)
+- [Author](#author)
 
 ---
 
-## 📁 Структура проекта
+## Overview
+
+Floating-point types (`float`, `double`) cannot represent simple base-10 or base-3 fractions such as $\frac{1}{3}$ or $\frac{1}{10}$ exactly in binary. `RationalNumber<T>` solves this by storing a numerator (`_num`) and denominator (`_denom`) of integral type `T` and overloading C++ arithmetic, relational, stream, cast, and literal operators so that fractions behave like built-in numeric primitives.
+
+The implementation resides in [`RationalNumber/RationalNumber.h`](RationalNumber/RationalNumber.h) inside `namespace yourname` (with user-defined literals in `namespace yourname::literals`) and is verified by **9 automated test suites** in [`RationalNumber/Tests/`](RationalNumber/Tests/).
+
+---
+
+## Key Technical Features
+
+- **Automatic Canonicalization (Irreducible Form)**
+  - Every constructed or mutated `RationalNumber<T>` is automatically reduced via `std::gcd` from `<numeric>` so that $\gcd(\text{\_num}, \text{\_denom}) = 1$.
+  - Sign normalization guarantees `_denom > 0` at all times; negative signs are always stored in `_num`.
+- **Overflow-Aware Arithmetic**
+  - **Addition & Subtraction (`+=`, `-=`)**: Uses `std::lcm(this->_denom, other._denom)` and divides each denominator *before* multiplying into the numerator:
+    ```cpp
+    T temp = std::lcm(this->_denom, other._denom);
+    this->_num = this->_num * (temp / this->_denom) + other._num * (temp / other._denom);
+    this->_denom = temp;
+    ```
+  - **Multiplication & Division (`*=`, `/=`)**: Cross-reduces `(this->_num, other._denom)` and `(this->_denom, other._num)` via `reduce()` *prior* to multiplication, preventing intermediate integer overflow on large 64-bit operands.
+- **Complete Operator Overloading**
+  - Compound assignment: `+=`, `-=`, `*=`, `/=`
+  - Binary arithmetic: `+`, `-`, `*`, `/` (including mixed `T` + `RationalNumber<T>` overloads)
+  - Unary sign operators (`+r`, `-r`) and prefix/postfix increment & decrement (`++r`, `r++`, `--r`, `r--`)
+  - Six relational operators: `==`, `!=`, `<`, `<=`, `>`, `>=`
+  - Implicit/explicit type conversions: `operator int()`, `operator float()`, `operator double()`, `operator bool()`
+  - Stream insertion: `operator<<` outputs `"num/denom"`
+- **User-Defined Literal (`_r`)**
+  - Provided in `namespace yourname::literals`, allowing expressive fraction syntax such as `auto x = 7_r / 8_r;`.
+
+---
+
+## Mathematical Invariants & Overflow Mitigation
+
+```mermaid
+flowchart LR
+    A["Input: (num, denom)"] --> B{"denom == 0?"}
+    B -- Yes --> ERR["throw std::invalid_argument"]
+    B -- No --> C{"denom < 0?"}
+    C -- Yes --> D["num = -num<br/>denom = -denom"]
+    C -- No --> E["g = std::gcd(num, denom)"]
+    D --> E
+    E --> F["num /= g<br/>denom /= g"]
+    F --> G["Canonical Invariant:<br/>denom > 0 &amp;&amp; gcd(|num|, denom) == 1"]
+```
+
+Because canonicalization is enforced as a class invariant:
+- **Equality (`operator==`)** runs in $O(1)$ time by directly comparing `lhs._num == rhs._num && lhs._denom == rhs._denom` without needing extra reductions.
+- **Cross-Canceled Multiplication (`operator*=`)** can multiply fractions with numerators/denominators near $2^{61}$ (such as $\frac{2305843009213693951}{1000010197} \times \frac{2000020394}{2305843009213693951} = \frac{2}{1}$ in `Test7.h`) without overflowing `unsigned long long`.
+
+---
+
+## Project Structure
 
 ```text
 RationalNumber/
-├── RationalNumber.sln               # Решение Visual Studio 2022
-├── .gitignore                       # Исключения сборщика и IDE
+├── RationalNumber.sln                              # Visual Studio 2022 Solution
+├── .gitignore                                      # Visual Studio & build artifact ignores
+├── README.md                                       # Project documentation
 │
 └── RationalNumber/
-    ├── RationalNumber.h             # Заголовочный файл: объявление и реализация шаблона класса
-    ├── main.cpp                     # Точка входа для запуска набора тестов
-    ├── RationalNumber.vcxproj       # Файл проекта MSVC
+    ├── RationalNumber.h                            # RationalNumber<T> class template & operators
+    ├── main.cpp                                    # Test runner entry point
+    ├── RationalNumber.vcxproj                      # MSVC project configuration (v143)
+    ├── RationalNumber.vcxproj.filters              # Solution Explorer filters
     │
-    └── Tests/                       # Модульные тесты (TDD)
-        ├── Test0.h                  # Базовые конструкторы и инициализация
-        ├── Test1.h                  # Сложение, вычитание и составное присваивание
-        ├── Test2.h                  # Умножение, деление и сокращение дробей
-        ├── Test3.h                  # Унарные операторы, префиксный и постфиксный инкремент/декремент
-        ├── Test4.h                  # Операторы сравнения (==, !=, <, <=, >, >=)
-        ├── Test5.h                  # Проверка исключения при делении на 0 (std::invalid_argument)
-        ├── Test6.h                  # Преобразования типов (int, float, double, bool)
-        ├── Test7.h                  # Пользовательский литерал _r (User-Defined Literal)
-        ├── Test8.h                  # Стресс-тесты и краевые случаи
-        └── Utils/                   # Кастомные утверждения (CustomAsserts)
+    └── Tests/                                      # 9 Incremental TDD Test Suites
+        ├── Test0.h                                 # Console sanity check for +=, -=, *=, /=, ++
+        ├── Test1.h                                 # Lexical verification of compound assignments & ++
+        ├── Test2.h                                 # Binary +, -, *, / operators
+        ├── Test3.h                                 # Mixed scalar-fraction arithmetic (1 + r, 3 * r) & unary +/-
+        ├── Test4.h                                 # Type cast operators (double, float, int)
+        ├── Test5.h                                 # GCD reduction & negative sign normalization
+        ├── Test6.h                                 # Relational operators (<, >, <=, >=, ==, !=)
+        ├── Test7.h                                 # Large-integer & 64-bit overflow-resistant arithmetic
+        ├── Test8.h                                 # User-defined literal (_r) in yourname::literals
+        └── Utils/
+            ├── CustomAsserts.h                     # Assertion utilities (assertLexicallyEqual, assertFloatEqual, etc.)
+            └── CustomAsserts.cpp                   # Boolean assertion implementation (assertBool)
 ```
 
 ---
 
-## 💡 Интерфейс класса
+## API Reference & Complexity
+
+Let $M = \min(|a|, |b|)$ denote the magnitude of operands passed to Euclidean `std::gcd` / `std::lcm`.
+
+| Category | Signature | Complexity | Description |
+| :--- | :--- | :---: | :--- |
+| **Constructor** | `RationalNumber(T num = 0, T denom = 1)` | $O(\log M)$ | Initializes $\frac{\text{num}}{\text{denom}}$, normalizes sign, and reduces via `std::gcd`. Throws `std::invalid_argument` if `denom == 0`. |
+| **Compound Add/Sub** | `RationalNumber& operator+=(const RationalNumber& other)`<br>`RationalNumber& operator-=(const RationalNumber& other)` | $O(\log M)$ | Adds or subtracts `other` in-place using `std::lcm`. |
+| **Compound Mul/Div** | `RationalNumber& operator*=(const RationalNumber& other)`<br>`RationalNumber& operator/=(const RationalNumber& other)` | $O(\log M)$ | Cross-reduces operands via `std::gcd` and multiplies in-place. `/=` throws `std::logic_error` if `other == 0`. |
+| **Inc / Dec** | `operator++()`, `operator++(int)`<br>`operator--()`, `operator--(int)` | $O(1)$ | Increments or decrements `_num` by `_denom`. |
+| **Unary Sign** | `RationalNumber operator+() const`<br>`RationalNumber operator-() const` | $O(1)$ | Returns copy or negated copy (`-_num / _denom`). |
+| **Binary Arithmetic** | `operator+`, `operator-`, `operator*`, `operator/` | $O(\log M)$ | Supports `(RationalNumber, RationalNumber)` and `(T, RationalNumber)`. |
+| **Type Casts** | `operator int() const`, `operator float() const`,<br>`operator double() const`, `operator bool() const` | $O(1)$ | Converts fraction to target built-in scalar type (`bool` checks `_num != 0`). |
+| **Equality** | `operator==`, `operator!=` | $O(1)$ | Compares canonical `_num` and `_denom` directly. |
+| **Ordering** | `operator<`, `operator<=`, `operator>`, `operator>=` | $O(1)$ | Compares via cross-multiplication `lhs._num * rhs._denom < rhs._num * lhs._denom`. |
+| **Stream Output** | `operator<<(std::ostream& os, const RationalNumber<U>& r)` | $O(1)$ | Writes `"_num/_denom"` to `os`. |
+| **Literal** | `RationalNumber<unsigned long long> operator""_r(unsigned long long)` | $O(1)$ | Constructs a `RationalNumber<unsigned long long>` from an integer literal. |
+
+---
+
+## Code Examples
+
+### 1. Exact Fraction Arithmetic & Reduction
 
 ```cpp
-namespace yourname {
+#include "RationalNumber/RationalNumber.h"
+#include <iostream>
 
-    template <typename T>
-    class RationalNumber {
-    public:
-        // Конструктор по умолчанию и с параметрами
-        RationalNumber(T num = 0, T denom = 1);
+int main()
+{
+    using yourname::RationalNumber;
+    using namespace yourname::literals;
 
-        // Составное присваивание
-        RationalNumber& operator+=(const RationalNumber& other);
-        RationalNumber& operator-=(const RationalNumber& other);
-        RationalNumber& operator*=(const RationalNumber& other);
-        RationalNumber& operator/=(const RationalNumber& other);
+    RationalNumber<int> a(10, 120); // Automatically reduced to 1/12
+    RationalNumber<int> b(9, -10);  // Normalized to -9/10
 
-        // Инкремент и декремент
-        RationalNumber& operator++();       // ++r
-        RationalNumber operator++(int);     // r++
-        RationalNumber& operator--();       // --r
-        RationalNumber operator--(int);     // r--
+    RationalNumber<int> sum = a + b;
+    std::cout << "a = " << a << ", b = " << b << "\n";       // a = 1/12, b = -9/10
+    std::cout << "a + b = " << sum << "\n";                  // a + b = -49/60
+    std::cout << "As double: " << static_cast<double>(sum) << "\n";
 
-        // Унарные операторы
-        RationalNumber operator+() const;
-        RationalNumber operator-() const;
-
-        // Преобразования типов
-        explicit operator int() const;
-        explicit operator float() const;
-        explicit operator double() const;
-        explicit operator bool() const;
-
-        // Ввод/вывод и сравнение
-        friend std::ostream& operator<<(std::ostream& os, const RationalNumber<T>& source);
-        friend bool operator<(const RationalNumber<T>& lhs, const RationalNumber<T>& rhs);
-        friend bool operator==(const RationalNumber<T>& lhs, const RationalNumber<T>& rhs);
-    };
-
-    namespace literals {
-        RationalNumber<unsigned long long> operator""_r(unsigned long long value);
-    }
+    // Using user-defined literals
+    auto c = 7_r / 5_r + 2_r / 10_r;
+    std::cout << "7/5 + 2/10 = " << c << "\n";               // 8/5
+    return 0;
 }
 ```
 
 ---
 
-## 🧪 Модульное тестирование (TDD)
+## Test Suite (TDD)
 
-Разработка велась по методологии **Test-Driven Development (TDD)**:
-1. `Test0`: Проверка создания дробей, знака в числителе и автоматического сокращения дроби.
-2. `Test1`: Арифметика сложения и вычитания дробей с разными знаменателями через `std::lcm`.
-3. `Test2`: Умножение, деление и взаимное сокращение множителей.
-4. `Test3`: Префиксные и постфиксные формы `++` и `--`, унарный минус.
-5. `Test4`: Все 6 операторов сравнения на положительных, отрицательных и равных дробях.
-6. `Test5`: Проверка выброса `std::invalid_argument` при знаменателе `0`.
-7. `Test6`: Корректность приведения дробей к `bool`, `int`, `float`, `double`.
-8. `Test7`: Корректность работы литерала `123_r`.
-9. `Test8`: Комплексные выражения и проверка сохранения инварианта дроби.
+All 9 test suites in [`RationalNumber/Tests/`](RationalNumber/Tests/) execute automatically during static initialization before `main()`:
 
----
-
-## ⚙️ Сборка и запуск
-
-### Требования
-- **ОС**: Windows 10 / 11
-- **IDE**: Visual Studio 2022 (v143 toolset)
-- **Стандарт C++**: C++20 или C++17
-
-### Инструкция
-1. Откройте `RationalNumber.sln` в Visual Studio 2022.
-2. Выберите конфигурацию **Debug** или **Release** (x64).
-3. Соберите проект (`Ctrl + Shift + B`) и запустите (`Ctrl + F5`).
-4. При успешном выполнении всех тестов в консоль выводится:
-   ```text
-   All tests passed!
-   ```
+| # | Test File | Verified Behavior |
+| :-: | :--- | :--- |
+| **0** | [`Test0.h`](RationalNumber/Tests/Test0.h) | Basic console output trace of `+=`, `-=`, `*=`, `/=`, post-increment, and pre-increment. |
+| **1** | [`Test1.h`](RationalNumber/Tests/Test1.h) | Automated lexical assertions (`assertLexicallyEqual`) for compound assignments and `++`. |
+| **2** | [`Test2.h`](RationalNumber/Tests/Test2.h) | Binary `+`, `-`, `*`, and `/` operators producing new `RationalNumber` instances. |
+| **3** | [`Test3.h`](RationalNumber/Tests/Test3.h) | Mixed scalar left-hand-side operations (`1 + r`, `3 * r`) and unary `+r` / `-r`. |
+| **4** | [`Test4.h`](RationalNumber/Tests/Test4.h) | `static_cast<double>`, `static_cast<float>`, and `static_cast<int>` conversions. |
+| **5** | [`Test5.h`](RationalNumber/Tests/Test5.h) | GCD reduction (`10/120 -> 1/12`) and sign normalization (`-7/-2 -> 7/2`, `9/-10 -> -9/10`). |
+| **6** | [`Test6.h`](RationalNumber/Tests/Test6.h) | All 6 relational operators (`<`, `>`, `<=`, `>=`, `==`, `!=`) across positive and negative fractions. |
+| **7** | [`Test7.h`](RationalNumber/Tests/Test7.h) | Large 32-bit and 64-bit (`unsigned long long`) fractions requiring pre-multiplication GCD cancellation. |
+| **8** | [`Test8.h`](RationalNumber/Tests/Test8.h) | User-defined literal `10_r`, `7_r / 8_r`, and arithmetic expressions with `_r`. |
 
 ---
 
-## 👨‍💻 Автор
+## Building & Running
 
-- **Давид Бахшян ([DavitBakh](https://github.com/DavitBakh))**
+### Option 1: Visual Studio 2022
+
+1. Open `RationalNumber.sln` in **Visual Studio 2022**.
+2. Select **Debug / x64** or **Release / x64**.
+3. Build (`Ctrl + Shift + B`) and run (`Ctrl + F5`).
+
+### Option 2: Command-Line Compilation (MSVC / GCC / Clang)
+
+**MSVC:**
+```powershell
+cl /EHsc /std:c++20 /W3 RationalNumber\main.cpp RationalNumber\Tests\Utils\CustomAsserts.cpp /Fe:rational_tests.exe
+.\rational_tests.exe
+```
+
+**GCC / Clang:**
+```bash
+g++ -std=c++20 -Wall -Wextra RationalNumber/main.cpp RationalNumber/Tests/Utils/CustomAsserts.cpp -o rational_tests
+./rational_tests
+```
+
+**Expected Output:**
+```text
+19/3
+4/3
+20/3
+4/3
+0/1
+2/1
+All tests passed!
+```
+
+---
+
+## Design Trade-Offs: Rational vs. Floating-Point
+
+As prompted in the coursework specification in [`RationalNumber.h`](RationalNumber/RationalNumber.h):
+- **Advantages of `RationalNumber<T>`**:
+  - Exact representation of all rational quantities without rounding drift (critical in symbolic algebra, financial ledgers, and exact computational geometry).
+- **Downsides & Potential Improvements**:
+  - **Denominator Growth**: Repeated additions of fractions with coprime denominators cause `_denom` (via `std::lcm`) to grow rapidly toward `std::numeric_limits<T>::max()`, eventually risking integer overflow unless paired with an arbitrary-precision `BigInt` type.
+  - **Runtime Overhead**: Every arithmetic operation invokes Euclidean `std::gcd` / `std::lcm` ($O(\log(\min(a,b)))$) instead of a single hardware FPU instruction.
+  - **Irrational Numbers**: Cannot exactly represent irrational values ($\sqrt{2}, \pi, e$) or transcendental functions ($\sin, \cos, \log$).
+  - **Future Extensions**: Adding `RationalNumber(const RationalNumber&, const T&)` right-hand scalar overloads (`r + 1`), calling `reduce(_num, _denom)` at the end of `operator+=` / `operator-=`, and using `explicit operator bool() const` to prevent unintended implicit integer conversions.
+
+---
+
+## Author
+
+- **Davit Bakhshyan** — [@DavitBakh](https://github.com/DavitBakh)
